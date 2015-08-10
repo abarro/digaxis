@@ -1,0 +1,14 @@
+<h1>Usuários e suas fotos</h1>
+<ul>
+<% @permagram.all_users.each do |user| %>
+<li>
+   <%= user["username"] %><br>
+   Number of photos: <%= @permagram.get_user_photos_of_month(user["objectId"]).count %><br>
+   <% @permagram.get_user_photos_of_month(user["objectId"]).each do |photo| %>
+ 	<%= link_to "#{photo['image']['url']}", photo["image"]["url"] %> and date of creation: <%= photo["createdAt"] %> <br>
+	<% end %>
+</li>
+<% end %>
+
+<%= @params %>
+</ul>
