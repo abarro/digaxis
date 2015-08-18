@@ -76,12 +76,14 @@ class PermagramConnection
           q.less_than("createdAt", Parse::Date.new("#{Time.now.year}-#{next_month}-01T00:00:00-03:00"))
         end.get
 
-        return get_month_photos
+        photo_hash = get_month_photos.collect { |x| x.to_h }
+
+        return photo_hash
     end
 
     def get_user_photos_of_month(userid)     
 
-        user_photos_this_month = @month_photos.find_all {|user| user["user"].pointer.to_h["objectId"] == userid }
+        user_photos_this_month = @month_photos.find_all {|user| user["user"]["objectId"] == userid }
         return user_photos_this_month
     end
 
