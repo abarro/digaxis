@@ -1,7 +1,5 @@
 class PermagramConnection
-    attr_accessor :photos_hash
-    attr_accessor :users_hash
-    attr_accessor :this_month
+    attr_accessor :photos_hash, :users_hash, :this_month, :month_photos
     
 
     #descobrir como eu inicializo a class com ou sem um argumento.
@@ -17,7 +15,7 @@ class PermagramConnection
         # @photos_hash = @get_photos.collect {|x| x.to_h }
         @this_month = this_month
 
-        # self.all_photos_this_month
+        @month_photos = self.all_photos_this_month
 
         
     end
@@ -83,7 +81,7 @@ class PermagramConnection
 
     def get_user_photos_of_month(userid)     
 
-        user_photos_this_month = all_photos_this_month.find_all {|user| user["user"].pointer.to_h["objectId"] == userid }
+        user_photos_this_month = @month_photos.find_all {|user| user["user"].pointer.to_h["objectId"] == userid }
         return user_photos_this_month
     end
 
