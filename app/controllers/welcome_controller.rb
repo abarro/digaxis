@@ -1,7 +1,8 @@
 class WelcomeController < ApplicationController
   require 'permagramconnection'
   def index
-  	@permagram = PermagramConnection.new
+  	params[:this_month] = 7
+  	@permagram = PermagramConnection.new(params[:this_month])
   	@params = params
   end
 end

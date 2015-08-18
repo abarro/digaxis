@@ -2,11 +2,12 @@ class PermagramConnection
     attr_accessor :photos_hash
     attr_accessor :users_hash
     attr_accessor :this_month
+    
 
     #descobrir como eu inicializo a class com ou sem um argumento.
     #descobrir como eu passo o mês pra classe de acordo com input do user.
 
-    def initialize
+    def initialize(this_month)
         @get_users = Parse::Query.new("_User").get
         @users_hash = @get_users.collect {|x| x.to_h }
 
@@ -14,9 +15,9 @@ class PermagramConnection
         # @get_photos = Parse::Query.new("Photo").get
         
         # @photos_hash = @get_photos.collect {|x| x.to_h }
-        @this_month = Time.now.month
+        @this_month = this_month
 
-        self.all_photos_this_month
+        # self.all_photos_this_month
 
         
     end
@@ -72,17 +73,17 @@ class PermagramConnection
         next_month = month + 1
 
         #later refactor to get also year
-        @get_month_photos = Parse::Query.new("Photo").tap do |q|
+        get_month_photos = Parse::Query.new("Photo").tap do |q|
           q.greater_than("createdAt", Parse::Date.new("#{Time.now.year}-#{month}-01T00:00:00-03:00"))
           q.less_than("createdAt", Parse::Date.new("#{Time.now.year}-#{next_month}-01T00:00:00-03:00"))
         end.get
 
-
-        return @get_month_photos
+        return get_month_photos
     end
 
     def get_user_photos_of_month(userid)     
-        user_photos_this_month = @get_month_photos.find_all {|user| user["user"]["objectId"] == userid }
+
+        user_photos_this_month = all_photos_this_month.find_all {|user| user["user"].pointer.to_h["objectId"] == userid }
         return user_photos_this_month
     end
 

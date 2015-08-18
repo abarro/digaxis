@@ -1,12 +1,14 @@
-<h1>Usuários e suas fotos</h1>
+<h1>Usuários e suas fotos do mês <%= @params[:this_month] %></h1>
 <ul>
 <% @permagram.all_users.each do |user| %>
 <li>
    <%= user["username"] %><br>
-   Number of photos: <%= @permagram.get_user_photos_of_month(user["objectId"]).count %><br>
-   <% @permagram.get_user_photos_of_month(user["objectId"]).each do |photo| %>
- 	<%= link_to "#{photo['image']['url']}", photo["image"]["url"] %> and date of creation: <%= photo["createdAt"] %> <br>
+      Number of photos: <%= @permagram.get_user_photos_of_month(user["objectId"]).count %><br>
+   <% @permagram.get_user_photos_of_month(user["objectId"]).map do |photo| %>
+ 	<%= link_to "#{photo['image'].to_h['url']}", photo["image"].to_h["url"] %> and date of creation: <%= photo["createdAt"] %> <br>
 	<% end %>
+
+
 </li>
 <% end %>
 
