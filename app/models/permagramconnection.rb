@@ -1,11 +1,7 @@
 class PermagramConnection
     attr_accessor :photos_hash, :users_hash, :this_month, :month_photos
-    
 
-    #descobrir como eu inicializo a class com ou sem um argumento.
-    #descobrir como eu passo o mês pra classe de acordo com input do user.
-
-    def initialize(this_month)
+    def initialize(this_month, the_year)
         @get_users = Parse::Query.new("_User").get
         @users_hash = @get_users.collect {|x| x.to_h }
 
@@ -14,7 +10,7 @@ class PermagramConnection
         
         # @photos_hash = @get_photos.collect {|x| x.to_h }
         @this_month = this_month
-
+        @the_year = the_year
         @month_photos = self.all_photos_this_month
 
         
@@ -65,20 +61,33 @@ class PermagramConnection
 
     def all_photos_this_month
 
-        #Set time interval to get photos - Get only photos of the month.
 
+        #time interval for month
         month = @this_month
         next_month = month + 1
+        year_one = @the_year
+        year_two = @the_year
 
-        #later refactor to get also year
-        get_month_photos = Parse::Query.new("Photo").tap do |q|
-          q.greater_than("createdAt", Parse::Date.new("#{Time.now.year}-#{month}-01T00:00:00-03:00"))
-          q.less_than("createdAt", Parse::Date.new("#{Time.now.year}-#{next_month}-01T00:00:00-03:00"))
-        end.get
+        if next_month == 13
+            next_month = 1
+            year_two = @the_year + 1
+            
+        end
+        puts "month is #{month} next month is: #{next_month}"
+        puts "betwenn year #{year_one} and: #{year_two}"
+
+        get_month_photos = self.query_all_photos_based_on_date(month, next_month, year_one, year_two)
 
         photo_hash = get_month_photos.collect { |x| x.to_h }
 
         return photo_hash
+    end
+
+    def query_all_photos_based_on_date(month, next_month, year_one, year_two)
+        Parse::Query.new("Photo").tap do |q|
+          q.greater_eq("createdAt", Parse::Date.new("#{year_one}-#{month}-01T00:00:00-03:00"))
+          q.less_eq("createdAt", Parse::Date.new("#{year_two}-#{next_month}-01T00:00:00-03:00"))
+        end.get
     end
 
     def get_user_photos_of_month(userid)     

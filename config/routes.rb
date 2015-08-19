@@ -1,6 +1,14 @@
 Rails.application.routes.draw do
   root 'welcome#index'
 
+  # get ':this_month', to: 'index'
+  # get '/welcome/:this_month', to: 'welcome#show'
+  # get '/welcome/:this_month', to: 'welcome#show'
+
+  get ':controller(/:action(/:the_year)(/:this_month))', as: :date
+  # get ':controller(/:action(/:this_month))'
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

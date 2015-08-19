@@ -1,4 +1,7 @@
-<h1>Usuários e suas fotos do mês <%= @params[:this_month] %></h1>
+<%= form_tag date_path, :method => 'get' do %>
+	<h1>Usuários e suas fotos do mês <%= select_tag(:this_month, options_for_select([[1],[2],[3],[4],[5],[6],[7],[8],[9],[10],[11],[12]]), prompt: @params[:this_month]) %> ano de <%= select_tag(:the_year, options_for_select([[2015],[2016],[2017],[2018]]), prompt: @params[:the_year]) %><%= submit_tag("Vai") %></h1>
+<% end %>
+
 <ul>
 <% @permagram.all_users.each do |user| %>
 <li>

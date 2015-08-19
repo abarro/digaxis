@@ -6,4 +6,6 @@ class ApplicationController < ActionController::Base
   Parse.init :application_id => "djWG6FbqpN3oODfRTaaU7mDCBzHidJ18ORkTR88R",
              :api_key        => "E0YZCKzljiLB4mXsZntYN51KiuUzFoy24oUKr1f7"
 
+  require 'permagramconnection'
+
 end
