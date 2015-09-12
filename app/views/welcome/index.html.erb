@@ -18,3 +18,48 @@
 <%= @params %>
 </ul>
 
+<button class="button">Clique</button>
+
+<script src='//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'/>
+<script src='/js/jszip/jszip.min.js'/>
+<script src='/js/jszip/jszip-utils.min.js'/>
+<script src='/js/jszip/FileSaver.js'/>
+<script>
+$(document).ready(function(){ 
+
+	  $('.button').on('click touchstart',function() {
+
+
+				function downloadAllImages("imgLinks"){
+				 var zip = new JSZip();
+				 var deferreds = [];
+				 for(var i=0; i<imgLinks.length; i++)
+				 {
+				  deferreds.push( addToZip(zip, imgLinks[i], i) );
+				 }
+				 $.when.apply(window, deferreds).done(generateZip);
+				}
+				function generateZip(zip)
+				{
+				 var content = zip.generate({type:"blob"});
+				 // see FileSaver.js
+				 saveAs(content, "downloadImages.zip");
+				}
+				function addToZip(zip, imgLink, i) {
+				  var deferred = $.Deferred();
+				  JSZipUtils.getBinaryContent(imgLink, function (err, data) {
+				    if(err) {
+				      alert("Problem happened when download img: " + imgLink);
+				      console.erro("Problem happened when download img: " + imgLink);
+				      deferred.resolve(zip); // ignore this error: just logging
+				      // deferred.reject(zip); // or we may fail the download
+				    } else {
+				      zip.file("picture"+i+".jpg", data, {binary:true});
+				      deferred.resolve(zip);
+				    }
+				 });
+				return deferred;
+				}
+	  });
+ });
+</script>
